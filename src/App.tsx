@@ -1,26 +1,59 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { count } from 'console';
+import React, { useState } from 'react'
+import Display from './Display'
+import ButtonPanel from './ButtonPanel'
+import calculate from './calculate'
+import './App.css'
 
-
-type AppProps = {
-  message:string;
-  count: number;
+interface states {
+  total: string | null;
+  next: string | null;
+  operation: string | null;
 }
 
-function App() {
 
-  let vars : AppProps = {
-    message:'Hi luis',
-    count:6
-  };
+const App: React.FC = () => {
+
+  const [total, setTotal] = useState<string | null>(null);
+  const [next, setNext] = useState<string | null>(null);
+  const [operation, setOperation] = useState<string | null>(null);
+  //const [current, setCurrent] = useState<string>('0');
+
+
+  const handleClick = (buttonName: string) => {
+
+    console.log(buttonName);
+
+    const initialStates: states = {
+      total: total,
+      next: next,
+      operation: operation,
+    }
+    const result = calculate(initialStates, buttonName);
+    if (result.total !== undefined) {
+      setTotal(result.total);
+    }
+    if (result.next !== undefined) {
+      setNext(result.next);
+    }
+
+    if (result.operation !== undefined) {
+      setOperation(result.operation);
+    }
+
+
+
+    console.log(total, next, operation);
+
+  }
+
+
 
   return (
-    <div className="App">
-      <p>{vars.message}</p>
+    <div className="component-app">
+      <Display value={total ?? next ?? '0'} />
+      <ButtonPanel clickHandler={handleClick} />
     </div>
-  );
+  )
 }
 
 export default App;
